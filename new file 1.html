@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ANDREA Heart Art - Estetik Pink</title>
+    <!-- Memuat Tailwind CSS untuk tata letak responsif -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Memuat Google Fonts untuk tipografi yang estetik -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@600;700&family=Playfair+Display:ital,wght@0,600;1,600&family=Plus+Jakarta+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+    
+    <style>
+        /* Pengaturan dasar dan variabel warna */
+        :root {
+            --bg-dark: #0f070c;
+            --bg-gradient-1: #1f0a16;
+            --bg-gradient-2: #0a0408;
+            --pink-primary: #ff4d94;
+            --pink-light: #ff99c2;
+            --pink-glow: rgba(255, 77, 148, 0.65);
+            --pink-glow-strong: rgba(255, 26, 117, 0.9);
+        }
+
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background: radial-gradient(circle at center, var(--bg-gradient-1) 0%, var(--bg-gradient-2) 100%);
+            color: #ffe6f0;
+            min-height: 100vh;
+            overflow-x: hidden;
+            transition: background 0.6s ease, color 0.6s ease;
+        }
+
+        /* Tema Pastel Terang (Opsional via tombol) */
+        body.pastel-theme {
+            background: radial-gradient(circle at center, #fff0f5 0%, #ffd6e7 100%);
+            color: #800033;
+            --pink-primary: #e6005c;
+            --pink-light: #ff4d94;
+            --pink-glow: rgba(230, 0, 92, 0.35);
+            --pink-glow-strong: rgba(230, 0, 92, 0.6);
+        }
+
+        /* Animasi detak jantung (Heartbeat) */
+        @keyframes heartbeat {
+            0%, 100% {
+                transform: scale(1);
+            }
+            14% {
+                transform: scale(1.06);
+            }
+            28% {
+                transform: scale(1);
+            }
+            42% {
+                transform: scale(1.09);
+            }
+            70% {
+                transform: scale(1);
+            }
+        }
+
+        .heart-beat-container {
+            animation: heartbeat 1.8s infinite ease-in-out;
+            transform-origin: center center;
+            will-change: transform;
+        }
+
+        .heart-beat-container.paused {
+            animation-play-state: paused;
+        }
+
+        /* Styling grid teks ANDREA */
+        .love-art-wrapper {
+            font-family: 'Fira Code', monospace;
+            line-height: 1.15;
+            letter-spacing: 0.08em;
+            user-select: none;
+        }
+
+        .love-cell {
+            display: inline-block;
+            transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1), color 0.3s ease, text-shadow 0.3s ease;
+            cursor: pointer;
+        }
+
+        .love-cell.active {
+            color: var(--pink-primary);
+            text-shadow: 
+                0 0 8px var(--pink-glow),
+                0 0 18px var(--pink-glow),
+                0 0 30px var(--pink-glow-strong);
+            font-weight: 700;
+        }
+
+        /* Efek berkilau acak pada huruf */
+        @keyframes shimmer {
+            0%, 100% {
+                opacity: 0.85;
+                color: var(--pink-primary);
+            }
+            50% {
+                opacity: 1;
+                color: var(--pink-light);
+                text-shadow: 
+                    0 0 12px #ffffff,
+                    0 0 24px var(--pink-primary),
+                    0 0 40px var(--pink-glow-strong);
+            }
+        }
+
+        .love-cell.sparkle {
+            animation: shimmer 2.5s infinite ease-in-out;
+        }
+
+        .love-cell.active:hover {
+            transform: scale(1.45) rotate(-5deg);
+            color: #ffffff;
+            text-shadow: 0 0 15px #fff, 0 0 30px var(--pink-primary);
+            z-index: 10;
+            position: relative;
+        }
+
+        /* Partikel hati melayang di latar belakang */
+        .floating-particle {
+            position: fixed;
+            pointer-events: none;
+            z-index: 0;
+            opacity: 0;
+            animation: floatUp linear forwards;
+        }
+
+        @keyframes floatUp {
+            0% {
+                transform: translateY(105vh) scale(0.5) rotate(0deg);
+                opacity: 0;
+            }
+            15% {
+                opacity: 0.45;
+            }
+            85% {
+                opacity: 0.35;
+            }
+            100% {
+                transform: translateY(-10vh) scale(1.2) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        /* Kartu kaca estetik (Glassmorphism) */
+        .glass-card {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 102, 163, 0.2);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4), inset 0 0 25px rgba(255, 77, 148, 0.08);
+            transition: all 0.5s ease;
+        }
+
+        body.pastel-theme .glass-card {
+            background: rgba(255, 255, 255, 0.65);
+            border: 1px solid rgba(230, 0, 92, 0.2);
+            box-shadow: 0 20px 50px rgba(230, 0, 92, 0.12), inset 0 0 25px rgba(255, 255, 255, 0.8);
+        }
+
+        .title-serif {
+            font-family: 'Playfair Display', serif;
+        }
+    </style>
+</head>
+<body class="flex flex-col items-center justify-center p-4 sm:p-6 md:p-8 relative">
+
+    <!-- Container untuk partikel latar belakang -->
+    <div id="particles-container" aria-hidden="true"></div>
+
+    <!-- Konten Utama -->
+    <main class="relative z-10 w-full max-w-2xl flex flex-col items-center text-center">
+        
+        <!-- Header Estetik -->
+        <header class="mb-6 sm:mb-8">
+            <span class="inline-block px-3 py-1 rounded-full text-xs font-medium tracking-widest uppercase mb-3 bg-pink-500/15 text-pink-400 border border-pink-500/30">
+                NYOBA AJASI
+            </span>
+            <h1 class="title-serif text-3xl sm:text-4xl md:text-5xl font-semibold tracking-tight bg-gradient-to-r from-pink-300 via-pink-500 to-rose-400 bg-clip-text text-transparent pb-1">
+                NYOBA
+            </h1>
+            <p class="text-xs sm:text-sm opacity-75 mt-1 max-w-md mx-auto">
+                PENCET <span class="font-semibold text-pink-400">LOVE</span>
+            </p>
+        </header>
+
+        <!-- Kartu Utama Tempat Bentuk Hati ANDREA Berada -->
+        <section class="glass-card w-full rounded-3xl p-6 sm:p-10 md:p-12 flex flex-col items-center justify-center relative overflow-hidden">
+            
+            <!-- Cahaya ambient di belakang hati -->
+            <div class="absolute w-56 h-56 sm:w-72 sm:h-72 bg-pink-600/20 rounded-full blur-3xl pointer-events-none"></div>
+
+            <!-- Kontainer Animasi Berdetak -->
+            <div id="heart-wrapper" class="heart-beat-container relative z-10 py-2">
+                <!-- Grid ASCII/Teks ANDREA akan di-render oleh JavaScript di sini -->
+                <div id="love-heart-grid" class="love-art-wrapper text-[11px] xs:text-xs sm:text-sm md:text-base lg:text-lg whitespace-pre select-none"></div>
+            </div>
+
+            <!-- Pesan Kustom di Bawah Hati -->
+            <div class="mt-6 sm:mt-8 relative z-10">
+                <p id="custom-quote" class="title-serif italic text-base sm:text-lg md:text-xl opacity-90 transition-opacity duration-300">
+                    "YA GITULAH POKOKNYA"
+                </p>
+            </div>
+        </section>
+
+        <!-- Panel Kontrol Interaktif -->
+        <footer class="mt-6 sm:mt-8 flex flex-wrap items-center justify-center gap-3">
+            <!-- Tombol Jeda/Putar Detak -->
+            <button id="toggle-beat-btn" type="button" class="px-4 py-2.5 rounded-xl text-xs sm:text-sm font-medium bg-pink-500/20 hover:bg-pink-500/30 border border-pink-500/40 text-pink-300 transition-all active:scale-95 flex items-center gap-2 cursor-pointer">
+                <span id="beat-icon">💓</span>
+                <span id="beat-text">Jeda Detak</span>
+            </button>
+
+            <!-- Tombol Ganti Tema (Gelap / Pastel) -->
+            <button id="toggle-theme-btn" type="button" class="px-4 py-2.5 rounded-xl text-xs sm:text-sm font-medium bg-pink-500/20 hover:bg-pink-500/30 border border-pink-500/40 text-pink-300 transition-all active:scale-95 flex items-center gap-2 cursor-pointer">
+                <span id="theme-icon">🌸</span>
+                <span id="theme-text">Mode</span>
+            </button>
+
+            <!-- Tombol Ubah Kata -->
+            <button id="toggle-word-btn" type="button" class="px-4 py-2.5 rounded-xl text-xs sm:text-sm font-medium bg-pink-600 hover:bg-pink-500 text-white shadow-lg shadow-pink-600/30 transition-all active:scale-95 flex items-center gap-2 cursor-pointer">
+                <span>✨</span>
+                <span id="word-text">Variasi</span>
+            </button>
+        </footer>
+    </main>
+
+    <script>
+        /**
+         * Konfigurasi Pola Hati (Matriks 13 baris x 15 kolom)
+         * Angka 1 merepresentasikan posisi di mana huruf 'ANDREA' akan ditempatkan,
+         * Angka 0 adalah ruang kosong.
+         */
+        const heartMatrix = [
+            [0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0],
+            [0, 1, 1, 1, 1, 1, 0, 0, 0, 1, 1, 1, 1, 1, 0],
+            [1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1],
+            [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+            [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+            [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+            [0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0],
+            [0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0],
+            [0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0],
+            [0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0]
+        ];
+
+        // Pilihan kata yang digunakan untuk menyusun bentuk hati
+        const wordPatterns = [
+            { label: "MODE 1", chars: "ANDREA", quote: '"MODE 1."' },
+            { label: "MODE 2", chars: "ANDREA", quote: '"MODE 2"' },
+            { label: "MODE 3", chars: "ANDREA", quote: '"MODE 3"' }
+        ];
+
+        let currentPatternIndex = 0;
+        let isBeating = true;
+        let isPastel = false;
+
+        const gridContainer = document.getElementById('love-heart-grid');
+        const heartWrapper = document.getElementById('heart-wrapper');
+        const customQuote = document.getElementById('custom-quote');
+
+        /**
+         * Membangun elemen HTML untuk membentuk simbol hati dari kata pilihan
+         */
+        function renderHeartArt() {
+            try {
+                gridContainer.innerHTML = '';
+                const pattern = wordPatterns[currentPatternIndex].chars;
+                let charPointer = 0;
+
+                heartMatrix.forEach((row, rowIndex) => {
+                    const rowDiv = document.createElement('div');
+                    rowDiv.className = 'flex justify-center items-center';
+
+                    row.forEach((cell, colIndex) => {
+                        const span = document.createElement('span');
+                        // Memberikan lebar karakter yang konsisten agar bentuk hati simetris
+                        span.className = 'love-cell w-[1.35em] sm:w-[1.5em] text-center inline-block';
+
+                        if (cell === 1) {
+                            const char = pattern[charPointer % pattern.length];
+                            span.textContent = char;
+                            span.classList.add('active');
+                            charPointer++;
+
+                            // Menambahkan efek berkilau (sparkle) secara acak pada beberapa huruf
+                            if ((rowIndex + colIndex) % 3 === 0) {
+                                span.classList.add('sparkle');
+                                span.style.animationDelay = `${(rowIndex * 0.2 + colIndex * 0.15) % 2.5}s`;
+                            }
+
+                            // Interaksi klik/sentuh untuk memunculkan efek letupan hati kecil
+                            span.addEventListener('click', (e) => {
+                                createBurstHeart(e.clientX, e.clientY);
+                            });
+                        } else {
+                            // Ruang kosong agar bentuk hati tetap proporsional
+                            span.innerHTML = '&nbsp;';
+                        }
+
+                        rowDiv.appendChild(span);
+                    });
+
+                    gridContainer.appendChild(rowDiv);
+                });
+            } catch (error) {
+                console.error("Gagal merender bentuk hati:", error);
+            }
+        }
+
+        /**
+         * Membuat efek partikel hati kecil saat pengguna mengklik huruf
+         */
+        function createBurstHeart(x, y) {
+            const heart = document.createElement('div');
+            heart.textContent = '🤍';
+            heart.style.position = 'fixed';
+            heart.style.left = `${x - 10}px`;
+            heart.style.top = `${y - 10}px`;
+            heart.style.pointerEvents = 'none';
+            heart.style.fontSize = '18px';
+            heart.style.zIndex = '50';
+            heart.style.transition = 'all 0.8s cubic-bezier(0.16, 1, 0.3, 1)';
+            document.body.appendChild(heart);
+
+            requestAnimationFrame(() => {
+                heart.style.transform = `translateY(-45px) scale(1.6)`;
+                heart.style.opacity = '0';
+            });
+
+            setTimeout(() => {
+                heart.remove();
+            }, 800);
+        }
+
+        /**
+         * Membuat partikel latar belakang melayang secara berkala
+         */
+        function spawnBackgroundParticle() {
+            const container = document.getElementById('particles-container');
+            if (!container) return;
+
+            const particle = document.createElement('span');
+            const symbols = ['♥', '♡', '✨', '•'];
+            particle.textContent = symbols[Math.floor(Math.random() * symbols.length)];
+            particle.className = 'floating-particle text-pink-400';
+
+            const leftPos = Math.random() * 100;
+            const duration = 7 + Math.random() * 8;
+            const size = 10 + Math.random() * 14;
+
+            particle.style.left = `${leftPos}vw`;
+            particle.style.fontSize = `${size}px`;
+            particle.style.animationDuration = `${duration}s`;
+
+            container.appendChild(particle);
+
+            setTimeout(() => {
+                particle.remove();
+            }, duration * 1000);
+        }
+
+        // Event Listener: Jeda / Putar animasi detak jantung
+        document.getElementById('toggle-beat-btn').addEventListener('click', () => {
+            isBeating = !isBeating;
+            const beatText = document.getElementById('beat-text');
+            const beatIcon = document.getElementById('beat-icon');
+
+            if (isBeating) {
+                heartWrapper.classList.remove('paused');
+                beatText.textContent = 'Jeda Detak';
+                beatIcon.textContent = '💓';
+            } else {
+                heartWrapper.classList.add('paused');
+                beatText.textContent = 'Mulai Detak';
+                beatIcon.textContent = '💗';
+            }
+        });
+
+        // Event Listener: Ganti Tema Gelap / Pastel
+        document.getElementById('toggle-theme-btn').addEventListener('click', () => {
+            isPastel = !isPastel;
+            const themeText = document.getElementById('theme-text');
+            const themeIcon = document.getElementById('theme-icon');
+            const buttons = document.querySelectorAll('#toggle-beat-btn, #toggle-theme-btn');
+
+            if (isPastel) {
+                document.body.classList.add('pastel-theme');
+                themeText.textContent = 'Mode Gelap';
+                themeIcon.textContent = '🌙';
+                buttons.forEach(btn => {
+                    btn.classList.remove('text-pink-300');
+                    btn.classList.add('text-pink-700');
+                });
+            } else {
+                document.body.classList.remove('pastel-theme');
+                themeText.textContent = 'Mode Pastel';
+                themeIcon.textContent = '🌸';
+                buttons.forEach(btn => {
+                    btn.classList.remove('text-pink-700');
+                    btn.classList.add('text-pink-300');
+                });
+            }
+        });
+
+        // Event Listener: Ubah Variasi Kata
+        document.getElementById('toggle-word-btn').addEventListener('click', () => {
+            currentPatternIndex = (currentPatternIndex + 1) % wordPatterns.length;
+            const current = wordPatterns[currentPatternIndex];
+            
+            document.getElementById('word-text').textContent = `Variasi: ${current.label}`;
+            customQuote.style.opacity = '0';
+            
+            setTimeout(() => {
+                customQuote.textContent = current.quote;
+                customQuote.style.opacity = '0.9';
+            }, 200);
+
+            renderHeartArt();
+        });
+
+        // Inisialisasi saat halaman dimuat
+        window.addEventListener('DOMContentLoaded', () => {
+            renderHeartArt();
+            // Memunculkan partikel awal
+            for (let i = 0; i < 8; i++) {
+                setTimeout(spawnBackgroundParticle, i * 600);
+            }
+            setInterval(spawnBackgroundParticle, 1200);
+        });
+    </script>
+</body>
+</html>
